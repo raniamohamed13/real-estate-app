@@ -37,8 +37,7 @@ export default function Hero({ bg, title, desc, btn, btnContent, icons }) {
       </div>
 
       {icons && (
-        <div className="absolute left-5 bottom-10 flex flex-col gap-4">
-          {socialIcons.map((icon, index) => (
+<div className="hidden lg:flex absolute left-5 bottom-10 flex-col gap-4">          {socialIcons.map((icon, index) => (
             <div
               key={index}
               className="relative w-12 h-12 flex items-center justify-center"

@@ -9,6 +9,7 @@ import Developers from "./pages/Developers";
 import Contact from "./pages/Contact";
 import ZoneProjects from "./pages/ZoneProjects";
 import ProjectDetails from "./pages/ProjectDetails";
+import StaticProjectDetails from "./pages/StaticProjectDetails";
 
 import DeveloperProjects from "./pages/DeveloperProjects";
 
@@ -19,6 +20,10 @@ export default function App() {
         <Route path="/" element={<Navigate to="/home" replace />} />
 
         <Route path="/home" element={<Home />} />
+        <Route
+  path="/static-projects/:id"
+  element={<StaticProjectDetails />}
+/>
 
         <Route path="/units" element={<Units />} />
         <Route path="/units/:id" element={<UnitDetails />} />

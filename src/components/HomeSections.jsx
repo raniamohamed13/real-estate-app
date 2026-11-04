@@ -77,9 +77,9 @@ export default function HomeSections({
           <div className="mx-auto mt-2 h-[5px] w-36 rounded-full bg-[#c84949]" />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
+        <div className="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-14">
           {/* Property Image */}
-          <div className="mx-auto h-[420px] w-full max-w-[673px] overflow-hidden rounded-tl-[70px] rounded-tr-[70px] sm:h-[520px] lg:ml-10 lg:h-[667px]">
+          <div className="mx-auto h-[320px] w-full max-w-[673px] overflow-hidden rounded-tl-[70px] rounded-tr-[70px] sm:h-[320px] lg:ml-10 lg:h-[667px]">
             {aboutImage && (
               <img
                 src={aboutImage}
@@ -90,26 +90,27 @@ export default function HomeSections({
           </div>
 
           {/* Description */}
-          <div className="flex flex-col items-start lg:pl-3">
+          <div className="flex flex-col items-start lg:h-[667px] lg:pl-3">
             <p className="text-justify text-base leading-8 text-[#625b5b] md:text-lg md:leading-9">
               We began with a singular, uncompromising vision: to bridge
-              the gap between world-class architecture and the individuals
-              who define our global culture. We recognized that for the
-              discerning client, a home is rarely just a physical structure;
+              the gap between world-class <br />architecture and the individuals
+              who define our global culture. <br /> We recognized that for the
+              discerning client, a home is rarely just a physical structure;<br />
+
               it is a curated environment, a private gallery, and the
-              ultimate expression of a life well-lived. Our journey started
+              ultimate expression of a life br well-lived. <br />Our journey started
               not in the pursuit of transactions, but in the pursuit of
-              excellence. We set out to dismantle the traditional,
-              high-volume real estate model in favor of a bespoke private
+              excellence. <br /> We set out to dismantle the traditional,
+              high-volume real estate model in favor of a bespoke <br /> private
               office approach—one where quality always supersedes quantity,
-              and where every client is treated as the sole focus of our
-              firm. We don't just find you a home; we secure your peace of
+              and where every client is treated <br /> as the sole focus of our
+              firm. We don't just find you a home;<br /> we secure your peace of
               mind through a veil of absolute professional confidentiality.
             </p>
 
             <button
               type="button"
-              className="mt-8 flex w-full max-w-[225px] items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-[#971717] to-[#c84949] px-6 py-3 text-base font-semibold text-white transition hover:opacity-90"
+             className="mt-8 flex w-full max-w-[225px] items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-[#971717] to-[#c84949] px-6 py-3 text-base font-semibold text-white transition hover:opacity-90 lg:mt-auto"
             >
               Know More
               <span className="text-2xl leading-none">→</span>
