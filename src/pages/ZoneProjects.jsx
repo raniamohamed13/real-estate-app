@@ -1,9 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Hero from "../components/Hero";
 import zonesHero from "../assets/zone.png";
-import api from "../utils/api";
+import api, { unwrapData } from "../utils/api";
 
 export default function ZoneProjects() {
   const { id } = useParams();
@@ -13,41 +12,42 @@ export default function ZoneProjects() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     async function getZone() {
       try {
         setLoading(true);
         setError("");
 
-        const response = await api.get("/zone");
+        const response = await api.get(`/zone/${id}`);
+        const selectedZone = unwrapData(response);
 
-        const data = response.data;
-
-        const zonesData = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-          ? data.data
-          : [];
-
-        const selectedZone = zonesData.find(
-          (item) => String(item.id) === String(id)
-        );
-
-        if (!selectedZone) {
-          setError("Zone not found.");
-          setZone(null);
-          return;
+        if (!selectedZone || !selectedZone.id) {
+          throw new Error("Zone response is empty or invalid.");
         }
 
-        setZone(selectedZone);
+        if (!cancelled) setZone(selectedZone);
       } catch (err) {
         console.error("Error fetching zone:", err);
-        setError("Failed to load projects. Please try again.");
+
+        if (!cancelled) {
+          setZone(null);
+          setError(
+            err.response?.status === 404
+              ? "Zone not found."
+              : "Failed to load projects. Please try again."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     getZone();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   return (
@@ -64,7 +64,6 @@ export default function ZoneProjects() {
       />
 
       <main className="mx-auto min-h-screen max-w-7xl px-5 py-12 md:px-10">
-
         <Link
           to="/zones"
           className="mb-8 inline-block text-sm font-medium text-red-800 hover:underline"
@@ -94,9 +93,8 @@ export default function ZoneProjects() {
               <div className="mx-auto mt-3 h-1 w-32 rounded-full bg-red-700" />
             </div>
 
-            {zone.projects?.length > 0 ? (
+            {Array.isArray(zone.projects) && zone.projects.length > 0 ? (
               <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-
                 {zone.projects.map((project) => (
                   <article
                     key={project.id}
@@ -129,7 +127,6 @@ export default function ZoneProjects() {
                     </div>
                   </article>
                 ))}
-
               </div>
             ) : (
               <p className="py-12 text-center text-gray-500">

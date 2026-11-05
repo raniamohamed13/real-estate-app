@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import api from "../utils/api";
+import api, { unwrapData, toArray } from "../utils/api";
 
 export default function DeveloperProjects() {
   const { id } = useParams();
@@ -11,36 +11,54 @@ export default function DeveloperProjects() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     async function getDeveloper() {
-      setLoading(true);
-      setError("");
-
       try {
-        const response = await api.get("/developer");
+        setLoading(true);
+        setError("");
 
-        const developers = Array.isArray(response.data)
-          ? response.data
-          : [];
+        const developerResponse = await api.get(`/developer/${id}`);
+        const developerData = unwrapData(developerResponse);
 
-        const selectedDeveloper = developers.find(
-          (item) => item.id === id
-        );
-
-        if (!selectedDeveloper) {
-          setError("Developer not found.");
-          return;
+        if (!developerData || !developerData.id) {
+          throw new Error("Developer response is empty or invalid.");
         }
 
-        setDeveloper(selectedDeveloper);
+        let developerProjects = Array.isArray(developerData.projects)
+          ? developerData.projects
+          : [];
+
+        // The developer endpoint may not include its projects, so use the
+        // documented projects list and match its developerId in that case.
+        if (!developerProjects.length) {
+          const projectsResponse = await api.get("/projects/all-projects");
+          const allProjects = toArray(unwrapData(projectsResponse));
+          developerProjects = allProjects.filter(
+            (project) => String(project.developerId) === String(id)
+          );
+        }
+
+        if (!cancelled) {
+          setDeveloper({ ...developerData, projects: developerProjects });
+        }
       } catch (err) {
-        console.error("Failed to fetch developer:", err);
-        setError("Failed to load projects. Please try again.");
+        console.error("Failed to fetch developer projects:", err);
+        if (!cancelled) {
+          setDeveloper(null);
+          setError(
+            err.response?.status === 404
+              ? "Developer not found."
+              : "Failed to load projects. Please try again."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     getDeveloper();
+    return () => { cancelled = true; };
   }, [id]);
 
   if (loading) {
@@ -65,7 +83,7 @@ export default function DeveloperProjects() {
     );
   }
 
-  const projects = developer.projects || [];
+  const projects = Array.isArray(developer.projects) ? developer.projects : [];
 
   return (
     <section className="min-h-screen bg-white px-5 py-12 md:px-12 lg:px-16">

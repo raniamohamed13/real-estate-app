@@ -63,12 +63,11 @@
 
 
 
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import developersHero from "../assets/Dev.png";
-import api from "../utils/api";
+import api, { unwrapData, toArray } from "../utils/api";
 
 export default function Developers() {
   const [developers, setDevelopers] = useState([]);
@@ -79,9 +78,7 @@ export default function Developers() {
     async function getDevelopers() {
       try {
         const response = await api.get("/developer");
-        setDevelopers(
-          Array.isArray(response.data) ? response.data : []
-        );
+        setDevelopers(toArray(unwrapData(response)));
       } catch (err) {
         console.error("Failed to fetch developers:", err);
         setError("Failed to load developers. Please try again.");

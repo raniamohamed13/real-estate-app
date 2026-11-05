@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import api from "../utils/api";
+import api, { unwrapData } from "../utils/api";
 
 export default function ProjectDetails() {
   const { id } = useParams();
@@ -10,45 +10,42 @@ export default function ProjectDetails() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     async function getProject() {
       try {
         setLoading(true);
         setError("");
 
-        const response = await api.get("/zone");
+        const response = await api.get(`/projects/${id}`);
+        const projectData = unwrapData(response);
 
-        const data = response.data;
-        const zones = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-            ? data.data
-            : [];
-
-        let foundProject = null;
-
-        for (const zone of zones) {
-          foundProject = zone.projects?.find(
-            (item) => item.id === id
-          );
-
-          if (foundProject) break;
+        if (!projectData || !projectData.id) {
+          throw new Error("Project response is empty or invalid.");
         }
 
-        if (!foundProject) {
-          setError("Project not found.");
-          return;
-        }
-
-        setProject(foundProject);
+        if (!cancelled) setProject(projectData);
       } catch (err) {
-        console.error(err);
-        setError("Failed to load project details.");
+        console.error("Failed to fetch project:", err);
+
+        if (!cancelled) {
+          setProject(null);
+          setError(
+            err.response?.status === 404
+              ? "Project not found."
+              : "Failed to load project details."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     getProject();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (loading) {

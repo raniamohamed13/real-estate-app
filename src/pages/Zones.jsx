@@ -47,8 +47,10 @@ export default function Zones() {
         icons={true}
       />
 
-      <section className="px-5 py-16 md:px-10">
-        {loading && (
+<section
+  data-theme="light"
+  className="min-h-screen bg-white px-5 py-16 text-gray-900 md:px-10"
+>        {loading && (
           <div className="flex justify-center py-10">
             <span className="loading loading-spinner loading-lg" />
           </div>
@@ -80,8 +82,7 @@ export default function Zones() {
       <Link
         to={`/zones/${zone.id}`}
         key={zone.id}
-        className="group overflow-hidden rounded-lg shadow-md transition hover:-translate-y-1 hover:shadow-xl"
-      >
+className="group overflow-hidden rounded-lg bg-white text-gray-900 shadow-md transition hover:-translate-y-1 hover:shadow-xl"      >
         <img
           src={zone.images?.[0]}
           alt={zone.name_en}
