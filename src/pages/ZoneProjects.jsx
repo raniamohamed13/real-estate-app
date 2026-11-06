@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Hero from "../components/Hero";
@@ -51,7 +52,10 @@ export default function ZoneProjects() {
   }, [id]);
 
   return (
-    <>
+    <div
+      data-theme="light"
+      className="min-h-screen bg-white text-gray-900"
+    >
       <Hero
         bg={zonesHero}
         title={zone?.name_en || "Explore Our Projects"}
@@ -63,7 +67,7 @@ export default function ZoneProjects() {
         icons={false}
       />
 
-      <main className="mx-auto min-h-screen max-w-7xl px-5 py-12 md:px-10">
+      <main className="mx-auto min-h-screen max-w-7xl bg-white px-5 py-12 text-gray-900 md:px-10">
         <Link
           to="/zones"
           className="mb-8 inline-block text-sm font-medium text-red-800 hover:underline"
@@ -98,7 +102,7 @@ export default function ZoneProjects() {
                 {zone.projects.map((project) => (
                   <article
                     key={project.id}
-                    className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    className="overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-900 shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                   >
                     <Link to={`/projects/${project.id}`}>
                       <img
@@ -108,7 +112,7 @@ export default function ZoneProjects() {
                       />
                     </Link>
 
-                    <div className="p-5">
+                    <div className="bg-white p-5 text-gray-900">
                       <h3 className="text-xl font-semibold text-gray-900">
                         {project.name_en}
                       </h3>
@@ -136,6 +140,6 @@ export default function ZoneProjects() {
           </>
         )}
       </main>
-    </>
+    </div>
   );
 }

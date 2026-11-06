@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api, { unwrapData } from "../utils/api";
@@ -50,16 +51,22 @@ export default function ProjectDetails() {
 
   if (loading) {
     return (
-      <div className="flex min-h-96 items-center justify-center">
-        <span className="loading loading-spinner loading-lg" />
+      <div
+        data-theme="light"
+        className="flex min-h-screen items-center justify-center bg-white text-gray-900"
+      >
+        <span className="loading loading-spinner loading-lg text-red-700" />
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="px-5 py-20 text-center">
-        <h2 className="text-2xl font-semibold">
+      <div
+        data-theme="light"
+        className="min-h-screen bg-white px-5 py-20 text-center text-gray-900"
+      >
+        <h2 className="text-2xl font-semibold text-gray-900">
           {error || "Project not found."}
         </h2>
 
@@ -74,36 +81,41 @@ export default function ProjectDetails() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-5 py-12 md:px-10">
-      <Link
-        to="/zones"
-        className="mb-8 inline-block text-red-700 hover:underline"
-      >
-        ← Back to Zones
-      </Link>
+    <main
+      data-theme="light"
+      className="min-h-screen bg-white px-5 py-12 text-gray-900 md:px-10"
+    >
+      <div className="mx-auto max-w-7xl">
+        <Link
+          to="/zones"
+          className="mb-8 inline-block text-red-700 hover:underline"
+        >
+          ← Back to Zones
+        </Link>
 
-      <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
-        {project.name_en}
-      </h1>
+        <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+          {project.name_en}
+        </h1>
 
-      <p className="mb-10 max-w-4xl leading-7 text-gray-600">
-        {project.description_en}
-      </p>
+        <p className="mb-10 max-w-4xl leading-7 text-gray-600">
+          {project.description_en}
+        </p>
 
-      {project.images?.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {project.images.map((image, index) => (
-            <img
-              key={`${image}-${index}`}
-              src={image}
-              alt={`${project.name_en} - ${index + 1}`}
-              className="h-72 w-full rounded-lg object-cover shadow-md md:h-96"
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">No images available.</p>
-      )}
+        {project.images?.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {project.images.map((image, index) => (
+              <img
+                key={`${image}-${index}`}
+                src={image}
+                alt={`${project.name_en} - ${index + 1}`}
+                className="h-72 w-full rounded-lg object-cover shadow-md md:h-96"
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No images available.</p>
+        )}
+      </div>
     </main>
   );
 }
